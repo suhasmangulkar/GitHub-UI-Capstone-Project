@@ -32,7 +32,7 @@ test.describe('GitHub Login Tests using POM', () => {
     // Negative login test case with incorrect username
     test.skip('Test 2 GitHub login test negative scenario', async ({page}) => {
         const loginUrl = process.env.GITHUB_LOGIN_URL;
-        const username = process.env.GITHUB_INCORRECT_USERNAME;
+        const incorrectUsername = process.env.GITHUB_INCORRECT_USERNAME;
         const password = process.env.GITHUB_PASSWORD;
         const loginPage = new GHLoginPage(page);
 
@@ -40,7 +40,7 @@ test.describe('GitHub Login Tests using POM', () => {
         await loginPage.navigateTo(loginUrl);
 
         // Login method to perform login
-        await loginPage.login(username, password);
+        await loginPage.login(incorrectUsername, password);
 
         // Verify incorrect username or password error message alert is displayed
         const currentUrl = await loginPage.getCurrentUrl();
@@ -66,18 +66,14 @@ test.describe('GitHub Login Tests using POM', () => {
         await loginPage.login(username, password);
 
         // Select my repository from all repositories dropdown on dashboard page after login
-        
-        //const isDropdownVisible = await loginPage.allRepoDropdown.isVisible();
-        //console.log("All repositories dropdown visibility: ", isDropdownVisible);
-        //await page.waitForTimeout(2000);
         await loginPage.allRepoDropdown.click();
-        //await page.pause();
-        //expect(await loginPage.myRepoOption.isChecked()).toBeFalsy();
+        
+        // Select one of the repositories option from the dropdown
         await loginPage.myRepoOption.click();
         await loginPage.allRepoDropdown.click(); // Click outside the dropdown to close it
+        
         //verify my repository text is visible in the dropdown after selection
         await expect(loginPage.allRepoDropdown).toHaveText(/suhasmangulkar\/MyRepository/i);
-        //expect(await loginPage.allRepoDropdown.toHaveTitle('suhasmangulkar/MyRepository')).toBeTruthy();
         console.log("Test 3 passed");
     });
 });

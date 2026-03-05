@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const baseURL = process.env.API_BASE_URL ?? 'https://api.github.com';
+
 test.describe('GitHub API - No Auth scenarios', () => {
     test('Get api root exposes standard links with no auth', async ({ request, baseURL}) => {
     
@@ -22,7 +24,9 @@ test.describe('GitHub API - No Auth scenarios', () => {
 
         const jsonData = await res.json();
         console.log('Response JSON:', jsonData);
-
+        // Validate current_user_url and repository_url in the response
+        expect(jsonData).toHaveProperty('current_user_url', `${baseURL}/user`);
+        expect(jsonData).toHaveProperty('repository_url', `${baseURL}/repositories`);
     });
 
     test('Get github api feeds with no auth', async ({ request, baseURL }) => {
@@ -57,7 +61,7 @@ test.describe('GitHub API - No Auth scenarios', () => {
         //const baseURL = process.env.API_BASE_URL ?? 'https://api.github.com';
         const response = await request.get(`${baseURL}/users/invaliduser`);
         console.log('Response status:', response.status());
-        expect(response.status()).toBe(200);
+        expect(response.status()).toBe(404);
     });
 });
 

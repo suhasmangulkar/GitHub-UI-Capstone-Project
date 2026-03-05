@@ -5,11 +5,11 @@ import { defineConfig, devices } from '@playwright/test';
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
- import dotenv from 'dotenv';
- dotenv.config();
+ //import dotenv from 'dotenv';
+ //dotenv.config();
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
-const baseURL = process.env.API_BASE_URL ?? 'https://api.github.com';
+//const baseURL = process.env.API_BASE_URL ?? 'https://api.github.com';
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
