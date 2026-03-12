@@ -4,7 +4,7 @@ dotenv.config();
 
 const filePath = process.env.FILE_PATH;
 
-export class UtilityMethods {
+export default class UtilityMethods {
     async readJsonFile(fileName){
         const fullPath = `${filePath}/${fileName}`;
         const jsonData = JSON.parse(fs.readFileSync(fullPath, 'utf-8'));
@@ -12,4 +12,4 @@ export class UtilityMethods {
     }
 }
 
-module.exports = { UtilityMethods };
+//module.exports = { UtilityMethods };

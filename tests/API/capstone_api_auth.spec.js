@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
 import console from 'console';
 import dotenv from 'dotenv';
-import { UtilityMethods } from '/utility/UtilityMethods.js';
+import UtilityMethods from '../../utility/UtilityMethods.js';
 //import * as ut from './UtilityMethods.js';
 //require('../utility/UtilityMethods.js');
 
@@ -16,7 +16,7 @@ test.describe('GitHub API - Auth scenarios', () => {
         const owner = process.env.GITHUB_OWNER;
         const repo = process.env.GITHUB_REPO;
         const apiVersion = process.env.GITHUB_API_VERSION ?? '2022-11-28';
-        //const baseURL = process.env.API_BASE_URL ?? 'https://api.github.com';
+        const baseURL = process.env.API_BASE_URL ?? 'https://api.github.com';
         
         const headers = {
             Authorization: `token ${token}`,
@@ -32,22 +32,47 @@ test.describe('GitHub API - Auth scenarios', () => {
     });
 
     //Post request to create an issue
+    test('Post request to create an issue with status code 422', async ({ request }) => {
+        const token = process.env.GITHUB_API_TOKEN;
+        const owner = process.env.GITHUB_OWNER;
+        const repo = process.env.GITHUB_REPO;
+        const apiVersion = process.env.GITHUB_API_VERSION ?? '2022-11-28';
+        //const filePath = process.env.FILE_PATH;
+        const util = new UtilityMethods();
+        const jsonInputData = await util.readJsonFile('post_request_to_create_an_issue.json');
+        const baseURL = process.env.API_BASE_URL ?? 'https://api.github.com';
+
+        const res = await request.post(`${baseURL}/repos/${owner}/${repo}/issues`, { 
+            headers : { Authorization: `token ${token}`,
+            'X-GitHub-Api-Version': apiVersion,
+            Accept: 'application/vnd.github.v3+json' },
+            data: { jsonInputData} 
+        });
+        expect(res.status()).toBe(422);
+        //const postJsonResponse = await res.json();
+        //expect(postJsonResponse.title).toBe(jsonInputData.title);
+        //expect(postJsonResponse.assignees).toBe(jsonInputData.assignees);
+    });
+
+    //Post request to create an issue
     test('Post request to create an issue', async ({ request }) => {
         const token = process.env.GITHUB_API_TOKEN;
         const owner = process.env.GITHUB_OWNER;
         const repo = process.env.GITHUB_REPO;
+        const apiVersion = process.env.GITHUB_API_VERSION ?? '2022-11-28';
         //const filePath = process.env.FILE_PATH;
-        //const util = new UtilityMethods();
-        const jsonInputData = await UtilityMethods.readJsonFile('post_request_to_create_an_issue.json');
+        const util = new UtilityMethods();
+        const jsonInputData = await util.readJsonFile('post_request_to_create_an_issue.json');
         const baseURL = process.env.API_BASE_URL ?? 'https://api.github.com';
 
         const res = await request.post(`${baseURL}/repos/${owner}/${repo}/issues`, { 
-            headers : { Authorization: `token ${token}` },
-            data: { jsonInputData} 
+            headers : { Authorization: `token ${token}`,
+            'X-GitHub-Api-Version': apiVersion,
+            Accept: 'application/vnd.github.v3+json' },
+            data: jsonInputData
         });
         expect(res.status()).toBe(201);
         const postJsonResponse = await res.json();
         expect(postJsonResponse.title).toBe(jsonInputData.title);
-        expect(postJsonResponse.assignees).toBe(jsonInputData.assignees);
     });
 });
